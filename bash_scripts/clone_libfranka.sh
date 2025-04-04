@@ -15,7 +15,7 @@ case $firmware_version in
   commit=83e931c
   ;;
 6)
-  commit=4f9e3cc
+  commit=0.15.0
   ;;
 *)
   valid_version=false

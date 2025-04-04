@@ -741,7 +741,7 @@ sudo vim ~/.zshrc
 ```
 Add the following lines to the end of your `~/.zshrc` file:
 ```
-source $HOME/$miniconda3/envs/manipulation/franka/bin/activate source $HOME/Franka/franka-interface/catkin_ws/devel/setup.zsh –extend
+source $HOME/miniconda3/envs/manipulation/franka/bin/activate source $HOME/Franka/franka-interface/catkin_ws/devel/setup.zsh –extend
 ```
 save the file and then 
 ```
@@ -755,7 +755,7 @@ sudo vim ~/.bshrc
 ```
 Add the following lines to the end of your `~/.bashrc` file:
 ```
-source $HOME/$miniconda3/envs/manipulation/franka/bin/activate source $HOME/Franka/franka-interface/catkin_ws/devel/setup.bash –extend
+source $HOME/miniconda3/envs/manipulation/franka/bin/activate source $HOME/Franka/franka-interface/catkin_ws/devel/setup.bash –extend
 ```
 save the file and then 
 ```

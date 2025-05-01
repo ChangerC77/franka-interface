@@ -1,3 +1,11 @@
+# Reading Order (very important !):
+1. [Hardware Setting)](https://github.com/ChangerC77/libfranka/blob/fr3/Hardware%20Setting.md)
+2. [real-time kernal.md](https://github.com/ChangerC77/libfranka/blob/dev/real-time%20kernal.md)\
+Before you using `Franka FCI`, you `MUST` set up `real-time kernal` first, because `real-time kernal` will make sure that the rate of control reaches 1kHz without delay. see more details in `real-time kernal.md`
+3. [libfranka](https://github.com/ChangerC77/libfranka)
+4. franka-interface (current markdown)
+5. [frankapy](https://github.com/ChangerC77/frankapy)
+
 # Franka Interface
 ## Reference
 https://github.com/iamlab-cmu/franka-interface
@@ -26,6 +34,7 @@ bash ./bash_scripts/clone_libfranka.sh 6
 <img src='img/1.png' width='70%'>
 <img src='img/2.png'>
 
+#### modified code (if download this code, you don't need follow this step)
 修改内容：第18行，将`git commit` 改为`0.15.0`
 ```
 sudo vim ./bash_scripts/clone_libfranka.sh
@@ -83,7 +92,29 @@ const std::array<double, 7> min_joint_limits_ = std::array<double, 7>{-2.88, -1.
 ```
 bash ./bash_scripts/make_libfranka.sh
 ```
-If you have the `franka research 3` and ran the command clone_libfranka.sh with the `number 6`, you should follow the additional commands:
+#### bug
+##### 1. version issue
+
+<img src='img/4.png' width='70%'>
+
+if you meet this case, that means your cpu not support this real-time kernal, you should use updated version
+
+<img src='img/3.png' width='70%'>
+
+##### 2. Protobuf
+```
+-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake (found version "1.71.0") found components: program_options -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake (found version "1.71.0") found components: filesystem system thread CMake Error at /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake:146 (message): Could NOT find Protobuf (missing: Protobuf_INCLUDE_DIR) Call Stack (most recent call first): /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake:393 (_FPHSA_FAILURE_MESSAGE) /usr/share/cmake-3.16/Modules/FindProtobuf.cmake:624 (FIND_PACKAGE_HANDLE_STANDARD_ARGS) franka-interface/CMakeLists.txt:21 (find_package) -- Configuring incomplete, errors occurred! See also "/home/tars/Franka/franka-interface/libfranka/CMakeFiles/CMakeOutput.log". See also "/home/tars/Franka/franka-interface/libfranka/CMakeFiles/CMakeError.log". Error: could not load cache
+```
+##### solution
+这个错误的关键在于它提示找不到 `Protobuf` 库，具体是 `Protobuf_INCLUDE_DIR`。这通常是因为 `Protobuf` 没有正确安装，或者 CMake 配置无法找到安装的 Protobuf 路径。
++ install Protobuf
+```
+sudo apt-get update
+sudo apt-get install -y protobuf-compiler libprotobuf-dev
+```
+-----------------------------------------------------------------------
+
+If you use the `franka research 3`, you should follow the additional commands:
 ```
 cd libfranka/build
 sudo make install
@@ -159,6 +190,7 @@ make: *** [Makefile:152：all] 错误 2
 ```
 从错误信息来看，链接器报错的原因是 Boost 库（libboost_program_options.so.1.86.0）依赖的 GLIBCXX 版本与系统的标准库版本（libstdc++）不匹配。具体问题是，Boost 库需要的符号（如 std::__cxx11::basic_string 和 std::ios_base_library_init）在当前的 libstdc++ 中不存在。
 这是一个常见的 ABI（Application Binary Interface）兼容性问题，通常是因为编译器或标准库版本不一致导致的。
+#### solution
 ##### 1. 检查 libstdc++ 版本
 运行以下命令，检查当前系统的 `libstdc++` 版本是否支持所需的符号：
 ```
@@ -187,6 +219,7 @@ strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
 ## 2. Enter the franka virtual environment (Virtual Environment) and then run the following commands:
 `ros noetic`需要的`empy`版本为`3.3.4`
 ```
+conda activate manipulation
 pip install catkin-tools empy==3.3.4
 bash ./bash_scripts/make_catkin.sh
 ```
